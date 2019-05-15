@@ -1,5 +1,20 @@
+require 'pry'
+require 'byebug'
+
 def consolidate_cart(cart)
-  # code here
+  cons = {}
+  cart.each do |food|
+    food.each do |item, item_stats|
+      if cons[item]
+        cons[item][:count] += 1
+      else 
+        item_stats[:count] = 1
+        cons[item] = item_stats
+      end
+    end
+  end
+  binding.pry
+  return cons
 end
 
 def apply_coupons(cart, coupons)
