@@ -21,6 +21,7 @@ end
 
 def apply_coupons(cart, coupons)
   clipped_cart = {}
+  
 
   cart.map do |item, details|
     # the array holds the coupons (hash)
@@ -45,16 +46,13 @@ def apply_coupons(cart, coupons)
           # That leftover will get it's count based on the remainder of count, 
           # and the number the coupon takes(Modulo)
           remainder = details[:count] % coupon[:num]
-          cart.delete(item) if remainder == 0
-          
-          if remainder > 0
-            cart[item] = {
-              :price => details[:price],
-              :clearance => details[:clearance],
-              :count => remainder
-            }
-          end
-          
+        
+          cart[item] = {
+            :price => details[:price],
+            :clearance => details[:clearance],
+            :count => remainder
+          }
+               
         end
         
       end
@@ -62,9 +60,10 @@ def apply_coupons(cart, coupons)
     end
     
   end
+
   # if any coupons were applied
   if clipped_cart.length > 0
-  cart.merge!(clipped_cart)
+    cart.merge!(clipped_cart)
   else
     # if No coupons were applied
     cart
