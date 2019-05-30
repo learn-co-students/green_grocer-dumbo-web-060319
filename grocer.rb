@@ -16,34 +16,6 @@ def consolidate_cart(cart)
   return cons
 end
 
-# def apply_coupons(cart, coupons)
-#   #subtract coupons[num] from cart[count]
-#   #create new key value pair |item w/ coupon|[:count]=result
-#   #=---------------------------------------------------------#
-#   #iterate through cart/ grab count
-#     #iterate though coupons/ grab num
-#       #subtract num from coupons
-#       #save result into a variable
-# count = nil
-# num = nil
-#   cart.each do |key, value|
-#     value.each do |key, value|
-#       if key == :count
-#         count = value
-#         coupons.each do |info|
-#           info.each do |key, value|
-#             if key == :num
-#               num = value
-#             end
-#           end
-#         end
-#       end
-#     end
-#   end
-#   binding.pry
-# end
-
-
 # let(:items) do
 #   [
 #     {"AVOCADO" => {:price => 3.00, :clearance => true}},
@@ -68,60 +40,57 @@ end
 # end
 
 def apply_coupons(cart, coupons)
-count = nil
-num = nil
 newhash = {}
 
 cart.each do |key, value|
-  
   newhash[key] = value
   coupons.each do |info|
-    
     info.each do |k, v|
-      
       if key == v && cart[key][:count] >= info[:num]
-        count = cart[key][:count]
-        num = info[:num]
-
-        newhash["#{key} W/COUPON"] = {}
-        newhash["#{key} W/COUPON"][:price] = info[:cost]
-        newhash["#{key} W/COUPON"][:clearance] = cart[key][:clearance]
-        newhash["#{key} W/COUPON"][:count] = 1
-        newhash[key][:count] = count - num
-        # binding.pry
+        newhash[key][:count] = cart[key][:count] - info[:num]
+        if newhash["#{key} W/COUPON"]
+           newhash["#{key} W/COUPON"][:count] += 1
+        else
+          newhash["#{key} W/COUPON"] = {}
+          newhash["#{key} W/COUPON"][:price] = info[:cost]
+          newhash["#{key} W/COUPON"][:clearance] = cart[key][:clearance]
+          newhash["#{key} W/COUPON"][:count] = 1
+        end
       end
     end
   end
 end
-newhash.each do |key, value|
-
-binding.pry
-end
 return newhash
 end
 
-
-# cart["#{newkey} W/COUPON"]
-  # cart.each do |key, value|
-  #   value.each do |key, value|
-  #     if key == :count
-  #       count = value
-  #       coupons.each do |info|
-  #         info.each do |key, value|
-  #           if key == :num
-  #             num = value
-  #           end
-  #         end
-  #       end
-  #     end
-  #   end
-  # end
-  # binding.pry
-
 def apply_clearance(cart)
-  # code here
+  cart.each do |item, info|
+    if info[:clearance] == true
+      discount = info[:price] * (0.2)
+      info[:price] = info[:price] - discount
+    end
+  end 
+  return cart
 end
 
 def checkout(cart, coupons)
-  # code here
+  # binding.pry
+  consolidate_cart(cart)
+  apply_coupons(cart, coupons)
+  apply_clearance(cart)
+  binding.pry
 end
+
+# * Apply coupon discounts if the proper number of items are present.
+
+# * Apply 20% discount if items are on clearance.
+
+# * If, after applying the coupon discounts and the clearance discounts, the cart's total is over $100, then apply a 10% discount.
+
+# ### Named Parameters
+
+# The method signature for the checkout method is
+# `consolidate_cart(cart:[])`. This, along with the checkout method uses a ruby 2.0 feature called [Named Parameters](http://brainspec.com/blog/2012/10/08/keyword-arguments-ruby-2-0/).
+
+# Named parameters give you more expressive code since you are specifying what each parameter is for. Another benefit is the order you pass your parameters doesn't matter!
+# `checkout(cart: [], coupons: [])` is the same as `checkout(coupons: [], cart: [])`

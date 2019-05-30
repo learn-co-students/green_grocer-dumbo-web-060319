@@ -1,3 +1,5 @@
+require 'pry'
+
 describe "Grocer" do
   let(:items) do
     [
@@ -147,7 +149,9 @@ describe "Grocer" do
         expect(two_coupon_result["AVOCADO"][:count]).to eq(1)
         expect(two_coupon_result["AVOCADO W/COUPON"][:price]).to eq(5.00)
         expect(two_coupon_result["AVOCADO"][:price]).to eq(3.00)
+        # binding.pry
         expect(two_coupon_result["AVOCADO W/COUPON"][:count]).to eq(2)
+        
       end
     end
   end
