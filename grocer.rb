@@ -73,13 +73,13 @@ def apply_clearance(cart)
   return cart
 end
 
-def checkout(cart, coupons)
-  # binding.pry
-  consolidate_cart(cart)
-  apply_coupons(cart, coupons)
-  apply_clearance(cart)
-  binding.pry
-end
+# def checkout(cart: [], coupons: [])
+#   # binding.pry
+#   consolidate_cart(cart: cart)
+#   apply_coupons(cart: cart, coupons: coupons)
+#   apply_clearance(cart: cart)
+#   binding.pry
+# end
 
 # * Apply coupon discounts if the proper number of items are present.
 
@@ -94,3 +94,25 @@ end
 
 # Named parameters give you more expressive code since you are specifying what each parameter is for. Another benefit is the order you pass your parameters doesn't matter!
 # `checkout(cart: [], coupons: [])` is the same as `checkout(coupons: [], cart: [])`
+
+
+def checkout(cart, coupons)
+  
+  cart = consolidate_cart(cart)
+  cart = apply_coupons(cart, coupons)
+  cart = apply_clearance(cart)
+  
+  total = 0
+  discount = 0
+
+  cart.each do |item, info|
+    total += info[:price] * info[:count]
+    
+  end
+  if total >= 100
+    discount = total * 0.1
+      total -= discount
+  end
+  
+  return total
+end
